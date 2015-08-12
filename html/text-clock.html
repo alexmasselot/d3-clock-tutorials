@@ -1,0 +1,64 @@
+<html>
+<head>
+    <title>text - d3 clock tutorials</title>
+
+</head>
+<body>
+<h2>Output</h2>
+
+<h3>Just text</h3>
+<span id="target1"></span>
+
+<h3>Array of values</h3>
+
+<div id="target2"></div>
+
+<h3>Changing the data: update pattern</h3>
+
+<div id="target3"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+<script src="date-commons.js"></script>
+<script>
+    var now = getNow();
+
+    //we just print out the date as text in the target element
+    var elTarget1 = d3.select('#target1');
+    elTarget1.text(now.hours + ':' + now.minutes + ':' + now.seconds);
+
+    //we now have an array of value that we want to tie with <span> blocks with the target div
+    var elTarget2 = d3.select('#target2');
+    elTarget2.selectAll('span')             //
+            .data(getNowArray())                  // tie with some data
+            .enter()
+            .append('span')                 // append a <span> block foreach data
+            .text(function (v, idx) {         // set the inner text as a function of the current data value and array index
+                return ((idx > 0) ? ':' : '') + v;
+            });
+
+    //we now want the timer to refresh.
+    //it's tight to nowData, but this will change and we'll have to update those
+    var elTarget3 = d3.select('#target3');
+
+    //create
+    var updateClock3 = function () {
+        var text = elTarget3.selectAll('span')
+                .data(getNowArray());
+
+        //create new element
+        text.enter().append('span');
+
+        //update existing
+        text.text(function (v, idx) {
+            return ((idx > 0) ? ':' : '') + v;
+        });
+
+    };
+    setInterval(function () {
+        updateClock3();
+    }, 500);
+
+</script>
+
+</body>
+</html>

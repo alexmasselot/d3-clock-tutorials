@@ -1,0 +1,19 @@
+<html>
+<head>
+    <title>text - d3 clock tutorials</title>
+
+</head>
+<body>
+<h2>Output</h2>
+<span id="target"></span>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+<script src="date-commons.js"></script>
+<script>
+    var now = getNow();
+    var elTarget=d3.select('#target');
+    elTarget.text(now.hours+':'+now.minutes+':'+now.seconds);
+</script>
+
+</body>
+</html>
