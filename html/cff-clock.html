@@ -12,22 +12,22 @@
         }
 
         g.ticks g.hour path {
-            stroke-width: 3;
+            stroke-width: 6;
         }
 
         g.hands path{
             stroke:black;
         }
         g.hands g.minutes path{
-            stroke-width:1.5;
+            stroke-width:6;
         }
 
         g.hands g.hours path{
-            stroke-width:2.5;
+            stroke-width:6;
         }
 
         g.hands g.seconds path{
-            stroke-width:1;
+            stroke-width:2;
             stroke:red;
         }
 
@@ -86,7 +86,7 @@
                 }
             })
             .append('path')
-            .attr('d', 'm0,0 l-' + (radius / 15) + ',0');
+            .attr('d', 'm0,0 l-' + (radius / 11) + ',0');
 
     //plot minute ticks
     gTicks.selectAll('g.tick.hour')
@@ -100,7 +100,7 @@
                 }
             })
             .append('path')
-            .attr('d', 'm0,0 l-' + (radius / 10) + ',0');
+            .attr('d', 'm0,0 l-' + (radius / 5) + ',0');
 
 
     //time for time
@@ -111,21 +111,7 @@
             .append('g')
             .datum(now)
             .attr('class', 'hands');
-    var gHandSeconds = gHands.append('g')
-            .attr('class', 'seconds')
-            .attr('transform', function (t) {
-                console.log(t);
-                return 'rotate(' + alpha(t.seconds/60) + ')';
-            });
 
-    gHandSeconds.append('path')
-            .attr('d', 'M-'+gHandBackRadius+',0 L'+radius*0.9+',0');
-    gHandSeconds.append('circle')
-            .attr({
-                cx:radius*0.9,
-                cy:0,
-                r:radius*0.06
-            });
 
     var gHandMinutes = gHands.append('g')
             .attr('class', 'minutes')
@@ -142,6 +128,22 @@
             });
     gHandHours.append('path')
             .attr('d', 'M-'+gHandBackRadius+',0 L'+radius*0.6+',0');
+
+                var gHandSeconds = gHands.append('g')
+            .attr('class', 'seconds')
+            .attr('transform', function (t) {
+                console.log(t);
+                return 'rotate(' + alpha(t.seconds/60) + ')';
+            });
+
+    gHandSeconds.append('path')
+            .attr('d', 'M-'+gHandBackRadius+',0 L'+radius*0.80+',0');
+    gHandSeconds.append('circle')
+            .attr({
+                cx:radius*0.80,
+                cy:0,
+                r:radius*0.07
+            });
 
 </script>
 
