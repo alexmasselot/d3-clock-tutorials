@@ -1,0 +1,81 @@
+<html>
+<head>
+    <title>CFF - d3 clock tutorials</title>
+
+    <style>
+        g.ticks path{
+            stroke:black;
+        }
+        g.ticks g.minute path{
+            stroke-width:1.5;
+        }
+        g.ticks g.hour path{
+            stroke-width:3;
+        }
+    </style>
+</head>
+<body>
+<h2>CFF</h2>
+
+<h3></h3>
+
+<div id="target"></div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+<script src="http://underscorejs.org/underscore-min.js"></script>
+<script src="date-commons.js"></script>
+<script>
+    var now = getNow();
+
+    var size = 200;
+    var radius = size / 2;
+    //we just print out the date as text in the target element
+    var svg = d3.select('#target')
+            .append('svg')
+            .attr({
+                width: size,
+                height: size
+            });
+
+    var gMain = svg.append('g').attr({
+        transform:'translate('+radius+','+radius+')'
+    });
+
+    var gTicks = gMain.append('g').attr({
+        class:'ticks'
+    });
+
+    //plot minute ticks
+    gTicks.selectAll('g.tick.minute')
+            .data(_.range(60))
+            .enter()
+            .append('g')
+            .attr({
+                class:'tick minute',
+                transform:function(t){
+                    return 'rotate('+(t/60*360)+') translate('+radius+',0)';
+                }
+            })
+            .append('path')
+            .attr('d', 'm0,0 l-'+(radius/15)+',0');
+
+    //plot minute ticks
+    gTicks.selectAll('g.tick.hour')
+            .data(_.range(12))
+            .enter()
+            .append('g')
+            .attr({
+                class:'tick hour',
+                transform:function(t){
+                    return 'rotate('+(t/12*360)+') translate('+radius+',0)';
+                }
+            })
+            .append('path')
+            .attr('d', 'm0,0 l-'+(radius/10)+',0');
+
+
+</script>
+
+</body>
+</html>
