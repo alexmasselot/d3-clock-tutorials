@@ -8,11 +8,11 @@
         }
 
         g.ticks g.minute path {
-            stroke-width: 1.5;
+            stroke-width: 7;
         }
 
         g.ticks g.hour path {
-            stroke-width: 3;
+            stroke-width: 17;
         }
 
         g.hands path {
@@ -21,19 +21,26 @@
 
         g.hands g.minutes path {
             stroke-width: 1.5;
+            fill: black
+
         }
 
         g.hands g.hours path {
-            stroke-width: 2.5;
+            stroke-width: 1;
+            fill: black
         }
 
         g.hands g.seconds path {
-            stroke-width: 1;
+            stroke-width: 3.5;
             stroke: red;
         }
 
         g.hands g.seconds circle {
             fill: red;
+        }
+
+        g.hands circle.middle-nail{
+            fill:#cb7c7a;
         }
     </style>
 </head>
@@ -51,18 +58,17 @@
 <script>
     var now = getNow();
 
-    var size = 200;
-    var radius = size / 2;
+
     //we just print out the date as text in the target element
     var svg = d3.select('#target')
             .append('svg')
             .attr({
-                width: size,
-                height: size
+                width: 500,
+                height: 500
             });
 
     var gMain = svg.append('g').attr({
-        transform: 'translate(' + radius + ',' + radius + ')'
+        transform: 'translate(' + 250 + ',' + 250 + ')'
     });
 
     var gTicks = gMain.append('g').attr({
@@ -82,61 +88,68 @@
                 .attr({
                     class: 'tick ' + name,
                     transform: function (t) {
-                        return 'rotate(' + (t / number * 360) + ') translate(' + radius + ',0)';
+                        return 'rotate(' + (t / number * 360) + ') translate(' + 230 + ',0)';
                     }
                 })
                 .append('path')
                 .attr('d', 'm0,0 l-' + size + ',0');
     };
-    plotTicks('minute', 60, radius / 15);
-    plotTicks('hour', 12, radius / 10);
+    plotTicks('minute', 60, 19);
+    plotTicks('hour', 12, 60);
 
 
     //time for time
     var time = getNow();
-    var gHandBackRadius = radius * 0.1;
 
     var gHands = gMain
             .append('g')
             .datum(now)
             .attr('class', 'hands');
-    var gHandSeconds = gHands.append('g')
-            .attr('class', 'seconds');
-    gHandSeconds.append('path')
-            .attr('d', 'M-' + gHandBackRadius + ',0 L' + radius * 0.9 + ',0');
-    gHandSeconds.append('circle')
-            .attr({
-                cx: radius * 0.9,
-                cy: 0,
-                r: radius * 0.06
-            });
-
-    var gHandMinutes = gHands.append('g')
-            .attr('class', 'minutes');
-    gHandMinutes.append('path')
-            .attr('d', 'M-' + gHandBackRadius + ',0 L' + radius * 0.9 + ',0');
 
     var gHandHours = gHands.append('g')
             .attr('class', 'hours');
     gHandHours.append('path')
-            .attr('d', 'M-' + gHandBackRadius + ',0 L' + radius * 0.6 + ',0');
+            .attr('d', 'M-54,-15 L-54,15 L152,12.5 L152,-12.5 Z');
+
+    var gHandMinutes = gHands.append('g')
+            .attr('class', 'minutes');
+    gHandMinutes.append('path')
+            .attr('d', 'M-54,-12 L-54,12 L222,8.5 L222,-8.5 Z');
+
+
+    var gHandSeconds = gHands.append('g')
+            .attr('class', 'seconds');
+    gHandSeconds.append('path')
+            .attr('d', 'M-84,0 L' + 146 + ',0');
+    gHandSeconds.append('circle')
+            .attr({
+                cx: 150,
+                cy: 0,
+                r: 24.5
+            });
+    gHands.append('circle')
+            .attr({
+                class:'middle-nail',
+                r:2
+            })
+
 
     var nextMinute = function () {
         var now = getNow();
-        time.minutes= now.minutes;
+        time.minutes = now.minutes;
         time.seconds = now.seconds;
         time.hours = now.hours;
         gHands.selectAll('g').datum(now);
 
-        gHandMinutes.attr('transform', function(t){
+        gHandMinutes.attr('transform', function (t) {
             return rotate(t.minutes / 60)
         });
-        gHandHours.attr('transform', function(t){
+        gHandHours.attr('transform', function (t) {
             return rotate(now.hours / 12 + t.minutes / (60 * 12) + t.seconds / (3600 * 12))
         });
 
         var minuteStopMillis = 2000;
-        var remainMillis = (60 - now.seconds) * 1000-minuteStopMillis;
+        var remainMillis = (60 - now.seconds) * 1000 - minuteStopMillis;
         gHandSeconds.transition()
                 .duration(remainMillis)
                 .ease("linear")
@@ -147,7 +160,7 @@
                     }
                 });
         gHandMinutes.transition()
-                .delay(remainMillis+minuteStopMillis)
+                .delay(remainMillis + minuteStopMillis)
                 .ease("bounce")
                 .duration(500)
                 .attrTween('transform', function (d, i, a) {
