@@ -96,11 +96,10 @@
 
 
     //time for time
-    var time = getNow();
 
     var gHands = gMain
             .append('g')
-            .datum(now)
+            .datum(getNow() )
             .attr('class', 'hands');
 
     var gHandHours = gHands.append('g')
@@ -128,14 +127,19 @@
             .attr({
                 class:'middle-nail',
                 r:2
-            })
+            });
 
-
+    var isFirstCycle=true;
     var nextMinute = function () {
         var now = getNow();
-        time.minutes = now.minutes;
-        time.seconds = now.seconds;
-        time.hours = now.hours;
+
+        if(isFirstCycle){
+            isFirstCycle=false;
+        }else{
+            //after the first cycle, we loose a little amount of time doing the minute hand bounce
+            //so we need the second hand to start smoothly from 0 and achieve the path in 58 seconds or so
+            now.seconds=0;
+        }
         gHands.selectAll('g').datum(now);
 
         gHandMinutes.attr('transform', function (t) {
